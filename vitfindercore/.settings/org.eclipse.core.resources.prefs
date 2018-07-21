@@ -1,0 +1,13 @@
+eclipse.preferences.version=1
+encoding//hmc/resources/de/hybris/platform/vitfindercore/hmc/locales_de.properties=UTF-8
+encoding//hmc/resources/de/hybris/platform/vitfindercore/hmc/locales_en.properties=UTF-8
+encoding//hmc/resources/de/hybris/platform/vitfindercore/hmc/locales_fr.properties=UTF-8
+encoding//hmc/resources/de/hybris/platform/vitfindercore/hmc/locales_it.properties=UTF-8
+encoding//hmc/resources/de/hybris/platform/vitfindercore/hmc/locales_ja.properties=UTF-8
+encoding//hmc/resources/de/hybris/platform/vitfindercore/hmc/locales_pt.properties=UTF-8
+encoding//hmc/resources/de/hybris/platform/vitfindercore/hmc/locales_zh.properties=UTF-8
+encoding//resources/localization/vitfindercore-locales_en.properties=UTF-8
+encoding//resources/vitfindercore/import/common/essential-data.impex=UTF-8
+encoding//resources/vitfindercore/test/testBatch.impex=UTF-8
+encoding//resources/vitfindercore/test/testSimpleSuggestionService.csv=UTF-8
+encoding/<project>=UTF-8

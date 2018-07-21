@@ -1,0 +1,54 @@
+# ImpEx for Promotions for Vitfinder Store
+#% impex.setLocale( Locale.GERMAN ); 
+
+$defaultPromoGrp=vitfinderPromoGrp
+$productCatalog=vitfinderProductCatalog
+$catalogVersion=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$productCatalog]),CatalogVersion.version[default=Online])[default=$productCatalog:Online]
+$regulargroup=regulargroup
+
+#### Order Discount ####
+INSERT PromotionPriceRow;&tresholdId;Currency(isocode);price
+;1;GBP;150
+
+
+INSERT PromotionPriceRow;&priceId;Currency(isocode);price
+;7;GBP;15
+
+INSERT_UPDATE OrderThresholdDiscountPromotion;PromotionGroup(Identifier[default=$defaultPromoGrp]);enabled[default=true,unique=true];code[unique=true];title;description;messageFired[lang=en_GB];priority;thresholdTotals(&tresholdId);discountPrices(&priceId)
+;;;OrderThreshold15Discount;You saved bunch of bucks for spending quite much;You saved bunch of bucks for spending quite much;You saved {3} for spending over {1};500;1;7
+
+INSERT_UPDATE PromotionUserRestriction;positive;promotion(code)[unique=true];users(uid)
+;TRUE;OrderThreshold15Discount;$regulargroup
+
+INSERT PromotionPriceRow;&tresholdId;Currency(isocode);price
+;4;GBP;200
+
+
+#### 10% Discount on Shoes ####
+INSERT_UPDATE ProductPercentageDiscountPromotion;PromotionGroup(Identifier[default=$defaultPromoGrp]);enabled[default=true][unique=true];code[unique=true];title;description;percentageDiscount;priority;categories(code,$catalogVersion)
+;;;10DiscountShoes;10% discount on shoes;10% discount on shoes;10;500;shoes
+
+#### Fixed price on Sunglasses (shades) for GBP24.99. ####
+INSERT PromotionPriceRow;&priceId;Currency(isocode);price
+;1;GBP;24,99
+
+INSERT_UPDATE ProductFixedPricePromotion;PromotionGroup(Identifier[default=$defaultPromoGrp]);enabled[default=true][unique=true];code[unique=true];title;description;productFixedUnitPrice(&priceId);priority;categories(code,$catalogVersion)
+;;;FixedPriceSunglasses;Full range of sunglasses all just 24.99;Full range of sunglasses all just 24.99;1;700;sunglasses
+
+#### Perfect partner on "Shades Anon Legion crystal & black grey" partner: "Cap Rip Curl D Cap vetiver" ####
+INSERT PromotionPriceRow;&priceId;Currency(isocode);price
+;3;GBP;30
+
+INSERT_UPDATE ProductPerfectPartnerPromotion;PromotionGroup(Identifier[default=$defaultPromoGrp]);enabled[default=true][unique=true];code[unique=true];title;description;priority;products(code,$catalogVersion);partnerProducts(code,$catalogVersion);partnerPrices(&priceId)
+;;;PerfectPartnerVitfinder;Buy Shades Anon Legion, get Cap Rip Curl for less;Buy Shades Anon Legion, get Cap Rip Curl for less;800;300044623;300051511;3
+
+#### Multibuy on 'others' category ####
+INSERT PromotionPriceRow;&priceId;Currency(isocode);price
+;2;GBP;30
+
+INSERT_UPDATE AcceleratorProductMultiBuyPromotion;PromotionGroup(Identifier[default=$defaultPromoGrp]);enabled[default=true][unique=true];code[unique=true];title;description;priority;products(code,$catalogVersion);qualifyingCount;bundlePrices(&priceId)
+;;;MultiBuyVitfinder;	Buy 2 tools for less;Buy 2 tools for less;700;300044596,300044599,300044600;2;2
+
+#### BOGOF on Helmets, Goggles, Backpack etc. ####
+INSERT_UPDATE AcceleratorProductBOGOFPromotion;PromotionGroup(Identifier[default=$defaultPromoGrp]);enabled[default=true][unique=true];code[unique=true];title;description;priority;categories(code,$catalogVersion);qualifyingCount;freeCount
+;;;BOGOFVitfinder;<b>Buy 2 from our range of helmets, goggles and backpacks and get 1 free</b>;<b>Buy 2 from our range of helmets, goggles and backpacks and get 1 free</b>;700;helmet,backpack,goggles;3

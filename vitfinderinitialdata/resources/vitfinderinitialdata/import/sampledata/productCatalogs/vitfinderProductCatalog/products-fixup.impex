@@ -1,0 +1,13 @@
+
+# Fix original accelerator products to migrate to new taxonomy
+
+# Macros / Replacement Parameter definitions
+$productCatalog=vitfinderProductCatalog
+$productCatalogName=Vitfinder Product Catalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$baseProduct=baseProduct(code, catalogVersion(catalog(id[default='$productCatalog']),version[default='Staged']))
+
+$categories=source(code, $catalogVersion)[unique=true]
+$products=target(code, $catalogVersion)[unique=true]
+
+INSERT_UPDATE CategoryProductRelation;$categories;$products

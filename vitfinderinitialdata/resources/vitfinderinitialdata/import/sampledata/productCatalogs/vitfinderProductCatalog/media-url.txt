@@ -1,0 +1,13 @@
+# ImpEx for Importing Category Brands Medias into vitfinder Store
+
+# Macros / Replacement Parameter definitions
+$productCatalog=vitfinderProductCatalog
+$productCatalogName=Vitfinder Product Catalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$media=@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator]
+$siteResource=jar:com.vitfinder.initialdata.constants.VitfinderInitialDataConstants&/vitfinderinitialdata/import/sampledata/productCatalogs/$productCatalog
+$logos=logo(code, $catalogVersion)
+$picture=picture(code, $catalogVersion)
+
+INSERT_UPDATE Media;code[unique=true];url2;mime[default='image/jpeg'];$catalogVersion
+;1234567;http://images.productserve.com/preview/6/3196/99/06/3151860699.jpg

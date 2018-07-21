@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- [y] hybris Platform Copyright (c) 2000-2015 hybris AG All rights reserved. 
+	This software is the confidential and proprietary information of hybris ("Confidential 
+	Information"). You shall not disclose such Confidential Information and shall 
+	use it only in accordance with the terms of the license agreement you entered 
+	into with hybris. -->
+
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="items.xsd">
+	<collectiontypes>
+		<collectiontype code="GenderList" elementtype="Gender"
+			autocreate="true" generate="true" type="list" />
+		<collectiontype code="SwatchColorSet" elementtype="SwatchColorEnum"
+			autocreate="true" generate="true" type="set" />
+		<collectiontype code="PreferenceList" elementtype="Preference"
+			autocreate="true" generate="true" type="list" />
+
+	</collectiontypes>
+
+
+	<enumtypes>
+		<enumtype generate="true" code="SwatchColorEnum" autocreate="true"
+			dynamic="true">
+			<value code="BLACK" />
+			<value code="BLUE" />
+			<value code="BROWN" />
+			<value code="GREEN" />
+			<value code="GREY" />
+			<value code="ORANGE" />
+			<value code="PINK" />
+			<value code="PURPLE" />
+			<value code="RED" />
+			<value code="SILVER" />
+			<value code="WHITE" />
+			<value code="YELLOW" />
+		</enumtype>
+		<enumtype code="Preference">
+			<value code="EMAIL" />
+			<!-- <value code="APP" /> -->
+		</enumtype>
+	</enumtypes>
+
+	<!-- vtf-40 -->
+	<relations>
+		<relation code="Retailer2DeliveryModeRel" autocreate="true"
+			generate="true" localized="false">
+			<deployment table="Retailer2DeliveryModeRel" typecode="10005" />
+			<sourceElement type="Retailer" qualifier="retailer"
+				cardinality="many" ordered="false" collectiontype="set">
+				<modifiers read="true" write="true" search="true" />
+			</sourceElement>
+			<targetElement type="DeliveryMode" qualifier="deliveryModes"
+				collectiontype="set" cardinality="many" ordered="false">
+				<modifiers read="true" write="true" search="true" />
+			</targetElement>
+		</relation>
+
+		<relation code="Cart2Retailer" autocreate="true" generate="true"
+			localized="false">
+			<sourceElement type="AbstractOrder" qualifier="cart"
+				cardinality="one" ordered="false">
+				<modifiers read="true" write="true" search="true" />
+			</sourceElement>
+			<targetElement type="Retailer" qualifier="retailer"
+				cardinality="many" ordered="false" collectiontype="list">
+				<modifiers read="true" write="true" search="true" />
+			</targetElement>
+		</relation>
+		<relation code="RetailerBaskets" autocreate="true" generate="true"
+			localized="false">
+			<sourceElement type="AbstractOrder" qualifier="cart"
+				cardinality="one" ordered="false">
+				<modifiers read="true" write="true" search="true" />
+			</sourceElement>
+			<targetElement type="Cart" qualifier="retailerBaskets"
+				cardinality="many" ordered="false" collectiontype="list">
+				<modifiers read="true" write="true" search="true" />
+			</targetElement>
+		</relation>
+
+		<relation code="Customer2Questionary" autocreate="true"
+			generate="true" localized="false">
+			<sourceElement type="Customer" qualifier="customer"
+				cardinality="one" ordered="false">
+				<modifiers read="true" write="true" search="true" />
+			</sourceElement>
+			<targetElement type="Questionary" qualifier="questionary"
+				cardinality="many" ordered="false" collectiontype="list">
+				<modifiers read="true" write="true" search="true" />
+			</targetElement>
+		</relation>
+
+		<relation code="Questionary2Prodcut" autocreate="true"
+			generate="true" localized="false">
+			<sourceElement type="Questionary" qualifier="questionary"
+				cardinality="one" ordered="false">
+				<modifiers read="true" write="true" search="true" />
+			</sourceElement>
+			<targetElement type="Product" qualifier="recommendedProducts"
+				cardinality="many" ordered="false" collectiontype="list">
+				<modifiers read="true" write="true" search="true" />
+			</targetElement>
+		</relation>
+	</relations>
+
+	<itemtypes>
+
+		<!-- vtf 40 -->
+		<itemtype code="Retailer" extends="GenericItem"
+			jaloclass="de.hybris.platform.jalo.retailer.Retailer" autocreate="true"
+			generate="true">
+			<deployment table="Retailer" typecode="10004" />
+			<attributes>
+				<attribute autocreate="true" qualifier="code" type="java.lang.String"
+					generate="true">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						initial="true" optional="false" unique="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="name" type="java.lang.String">
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="description" type="java.lang.String">
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property">
+					</persistence>
+				</attribute>
+				<attribute autocreate="true" qualifier="redirectUrl" type="java.lang.String">
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property">
+					</persistence>
+				</attribute>
+				<attribute autocreate="true" qualifier="thumbnail" type="Media">
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property">
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- vtf 129 -->
+		<itemtype code="PriceRow" autocreate="false" generate="false">
+			<description>Extending the PriceRow type from core with additional attributes.</description>
+			<attributes>
+				<attribute qualifier="wasPrice" type="java.lang.Double"
+					autocreate="true" generate="true">
+					<persistence type="property" />
+					<modifiers read="true" write="true" optional="true" />
+				</attribute>
+				<attribute qualifier="discountValue" type="java.lang.String"
+					autocreate="true" generate="true">
+					<persistence type="dynamic" attributeHandler="dynamicAttributeDiscountHandler" />
+					<modifiers read="true" write="false" optional="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="Product" extends="GenericItem"
+			jaloclass="de.hybris.platform.jalo.product.Product" autocreate="false"
+			generate="false">
+			<attributes>
+				<attribute type="StockLevelStatus" qualifier="stockLevelStatus">
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="promotionalMessage">
+					<modifiers read="true" write="true" optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="eanNumber">
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="flavor">
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.Double" qualifier="Strength">
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="dietary">
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="merchantURL">
+					<persistence type="property" />
+				</attribute>
+
+			</attributes>
+		</itemtype>
+
+
+		<itemtype code="Product" extends="GenericItem"
+			jaloclass="de.hybris.platform.jalo.product.Product" autocreate="false"
+			generate="false">
+
+
+		</itemtype>
+
+		<itemtype code="AbstractVitfinderProduct" extends="Product"
+			abstract="true" autocreate="true" generate="true">
+			<description>Abstract Vitfinder product</description>
+		</itemtype>
+
+		<itemtype code="VitfinderGenericProduct" autocreate="true"
+			generate="true" extends="AbstractVitfinderProduct">
+			<description>Vitfinder Generic product</description>
+			<deployment table="VitfinderGenericProducts" typecode="10001" />
+		</itemtype>
+
+		<itemtype code="VitfinderEANProduct" autocreate="true"
+			generate="true" extends="AbstractVitfinderProduct">
+			<description>Vitfinder EAN product</description>
+			<deployment table="VitfinderEANProducts" typecode="10002" />
+		</itemtype>
+		<itemtype code="CommunicationPreference" autocreate="true"
+			generate="true" extends="GenericItem"
+			jaloclass="com.vitfinder.core.jalo.CommunicationPreference">
+			<description>Communication Preferences</description>
+			<deployment table="CommunicationPreferences" typecode="10003" />
+			<attributes>
+				<attribute type="PreferenceList" qualifier="listOfPreference">
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.Integer" qualifier="remainder">
+					<modifiers read="true" write="true" />
+					<persistence type="property" />
+				</attribute>
+
+			</attributes>
+		</itemtype>
+		<itemtype code="Customer" autocreate="false" generate="false">
+			<description>Extending Customer type with vitfinder attributes.</description>
+			<attributes>
+				<attribute autocreate="true" qualifier="communicationPreferences"
+					type="CommunicationPreference">
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+					<description>It holds communication Preferences about customer (EMAIL, APP))</description>
+				</attribute>
+				<attribute type="CommonQuestionary" qualifier="commonQuestionary">
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+		<itemtype code="Category" autocreate="false" generate="false">
+			<attributes>
+				<attribute type="java.lang.Boolean" qualifier="genericCategory">
+					<persistence type="property" />
+					<modifiers optional="true" />
+					<defaultvalue>Boolean.FALSE</defaultvalue>
+					<description>Category level inventory threshold value</description>
+				</attribute>
+				<attribute qualifier="last" type="java.lang.Boolean"
+					generate="true">
+					<persistence type="property" />
+					<defaultvalue>Boolean.FALSE</defaultvalue>
+				</attribute>
+				<attribute qualifier="symptoms" type="java.lang.Boolean"
+					generate="true">
+					<defaultvalue>Boolean.FALSE</defaultvalue>
+					<persistence type="property" />
+				</attribute>
+
+			</attributes>
+		</itemtype>
+
+		<itemtype code="ClassificationAttribute" generate="false"
+			autocreate="false">
+			<attributes>
+				<attribute generate="true" autocreate="true" qualifier="ri"
+					type="java.lang.String">
+					<persistence type="property" qualifier="" />
+					<modifiers optional="true" />
+				</attribute>
+				<attribute generate="true" autocreate="true" qualifier="safeUpperLimit"
+					type="java.lang.Double">
+					<persistence type="property" qualifier="" />
+					<modifiers optional="true" />
+					<defaultvalue>0.0</defaultvalue>
+				</attribute>
+			</attributes>
+
+
+		</itemtype>
+		<itemtype code="CommonQuestionary" autocreate="true"
+			generate="true" jaloclass="com.vitfinder.core.jalo.CommonQuestionary">
+			<deployment table="commonQuestionary" typecode="10008" />
+			<attributes>
+				<attribute type="java.lang.String" qualifier="gender">
+					<modifiers />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.Integer" qualifier="age">
+					<modifiers />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.double" qualifier="height">
+					<modifiers />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.Integer" qualifier="weight">
+					<modifiers />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="boolean" qualifier="storeData">
+					<modifiers />
+					<persistence type="property" />
+				</attribute>
+				<!-- <attribute type="java.lang.String" qualifier="exercise"> <modifiers/> 
+					<persistence type="property"/> </attribute> <attribute type="java.lang.String" 
+					qualifier="headaches"> <modifiers/> <persistence type="property"/> </attribute> 
+					<attribute type="java.lang.String" qualifier="drink"> <modifiers/> <persistence 
+					type="property"/> </attribute> -->
+
+			</attributes>
+		</itemtype>
+		<itemtype code="AbstractOrderEntry" autocreate="false"
+			generate="false">
+			<description>Extending AbstractOrderEntry type with additional attributes.</description>
+			<attributes>
+				<attribute qualifier="genericProduct" type="VitfinderGenericProduct">
+					<description>Respected generic product.</description>
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="BasketSorts" generate="true" autocreate="true"
+			jaloclass="com.vitfinder.core.jalo.BasketSorts">
+			<deployment table="basketsorts" typecode="10006" />
+			<attributes>
+				<attribute type="java.lang.String" qualifier="code">
+					<modifiers unique="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="name">
+					<persistence type="property" />
+				</attribute>
+				<attribute type="java.lang.String" qualifier="beanId">
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="DisqusConfigParams" extends="GenericItem"
+			jaloclass="de.hybris.platform.jalo.disqus.DisqusConfigParams"
+			autocreate="true" generate="true">
+			<deployment table="DisqusParams" typecode="10009" />
+			<attributes>
+				<attribute autocreate="true" qualifier="code" type="java.lang.String"
+					generate="true">
+					<persistence type="property" />
+					<modifiers read="true" write="true" search="true"
+						initial="true" optional="false" unique="true" />
+				</attribute>
+				<attribute autocreate="true" qualifier="name" type="java.lang.String">
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+				<attribute autocreate="true" qualifier="secretKey" type="java.lang.String">
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property">
+					</persistence>
+				</attribute>
+				<attribute autocreate="true" qualifier="publicApiKey"
+					type="java.lang.String">
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property">
+					</persistence>
+				</attribute>
+				<attribute autocreate="true" qualifier="forumName" type="java.lang.String">
+					<modifiers read="true" write="true" search="true"
+						optional="false" />
+					<persistence type="property">
+					</persistence>
+				</attribute>
+			</attributes>
+		</itemtype>
+		<itemtype code="BaseSite" autocreate="false" generate="false">
+			<description>Extending BaseSite type to hold Disqus Config Params.</description>
+			<attributes>
+				<attribute qualifier="disqusParams" type="DisqusConfigParams">
+					<modifiers read="true" write="true" search="true"
+						optional="true" />
+					<persistence type="property" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<itemtype code="QuestionnaireMetric" autocreate="true"
+			generate="true" jaloclass="de.hybris.platform.jalo.QuestionnaireMetric">
+			<description>Store questions asked to customer and their respective answers</description>
+			<deployment table="questionnaire" typecode="10010" />
+			<attributes>
+				<attribute qualifier="question" type="java.lang.String"
+					generate="true" autocreate="true">
+					<persistence type="property">
+						<columntype database="mysql">
+							<value>TEXT</value>
+						</columntype>
+						<columntype database="hsqldb">
+							<value>LONGVARCHAR</value>
+						</columntype>
+					</persistence>
+					<modifiers optional="true" />
+				</attribute>
+				<attribute qualifier="answer" type="java.lang.String"
+					generate="true" autocreate="true">
+					<persistence type="property" />
+					<modifiers optional="true" />
+				</attribute>
+			</attributes>
+		</itemtype>
+
+		<!-- TypeGroups are for structure of this file only -->
+
+		<typegroup name="Apparel">
+			<itemtype code="ApparelProduct" extends="Product"
+				autocreate="true" generate="true" jaloclass="com.vitfinder.core.jalo.ApparelProduct">
+				<description>Base apparel product extension that contains additional attributes.</description>
+				<attributes>
+					<attribute qualifier="genders" type="GenderList">
+						<description>List of genders that the ApparelProduct is designed for</description>
+						<modifiers />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="ApparelStyleVariantProduct" extends="VariantProduct"
+				autocreate="true" generate="true"
+				jaloclass="com.vitfinder.core.jalo.ApparelStyleVariantProduct">
+				<description>Apparel style variant type that contains additional attribute describing variant style.
+				</description>
+				<attributes>
+					<attribute qualifier="style" type="localized:java.lang.String"
+						metatype="VariantAttributeDescriptor">
+						<description>Color/Pattern of the product.</description>
+						<modifiers />
+						<persistence type="property" />
+					</attribute>
+					<attribute qualifier="swatchColors" type="SwatchColorSet">
+						<description>A normalized color mapping to a standardized front-end navigable name.
+						</description>
+						<modifiers />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="RetailerVariantProduct" extends="VariantProduct"
+				autocreate="true" generate="true"
+				jaloclass="com.vitfinder.core.jalo.RetailerVariantProduct">
+				<description>Vitfinder retailer variant type that contains additional attribute describing variant size.
+				</description>
+				<attributes>
+					<attribute qualifier="retailer" type="localized:java.lang.String"
+						metatype="VariantAttributeDescriptor">
+						<description>merchant of the product.</description>
+						<modifiers />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="ApparelSizeVariantProduct" extends="ApparelStyleVariantProduct"
+				autocreate="true" generate="true"
+				jaloclass="com.vitfinder.core.jalo.ApparelSizeVariantProduct">
+				<description>Apparel size variant type that contains additional attribute describing variant size.
+				</description>
+				<attributes>
+					<attribute qualifier="size" type="localized:java.lang.String"
+						metatype="VariantAttributeDescriptor">
+						<description>Size of the product.</description>
+						<modifiers />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+
+		<typegroup name="Electronics">
+			<itemtype code="ElectronicsColorVariantProduct" extends="VariantProduct"
+				autocreate="true" generate="true"
+				jaloclass="com.vitfinder.core.jalo.ElectronicsColorVariantProduct">
+				<description>Electronics color variant type that contains additional attribute describing variant color.
+				</description>
+				<attributes>
+					<attribute qualifier="color" type="localized:java.lang.String"
+						metatype="VariantAttributeDescriptor">
+						<description>Color of the product.</description>
+						<modifiers />
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+		<typegroup name="BaseCommerce">
+			<itemtype code="BaseStore" autocreate="false" generate="false">
+				<description>Extending BaseStore type with additional attributes.</description>
+				<attributes>
+					<attribute type="java.lang.Boolean" qualifier="captchaCheckEnabled">
+						<persistence type="property" />
+						<modifiers optional="false" />
+						<defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+						<description>Determines whether the site should use captcha during registration.</description>
+					</attribute>
+				</attributes>
+			</itemtype>
+
+			<itemtype code="CMSLinkComponent" autocreate="false"
+				generate="false">
+				<attributes>
+					<attribute qualifier="media" type="localized:Media">
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+		<typegroup name="Questionary">
+			<itemtype code="Questionary" autocreate="true" generate="true"
+				jaloclass="com.vitfinder.core.jalo.Questionary">
+				<description>It will stores Questions and Answers which are submitted by Customer</description>
+				<deployment table="Questionary" typecode="10007" />
+				<attributes>
+					<attribute qualifier="questions" type="Category"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true" />
+					</attribute>
+					<attribute qualifier="answers" type="Category" generate="true"
+						autocreate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true" />
+					</attribute>
+					<attribute qualifier="symptomCategory" type="Category"
+						generate="true" autocreate="true">
+						<persistence type="property" />
+						<modifiers read="true" write="true" optional="true" />
+					</attribute>
+				</attributes>
+			</itemtype>
+		</typegroup>
+
+
+		<typegroup name="fitBitRotatingComponent">
+			<itemtype code="HomePageFitbitRotatingComponent" generate="true"
+				autocreate="true" extends="RotatingImagesComponent">
+
+			</itemtype>
+
+			<itemtype code="BannerComponent" extends="GenericItem"
+				jaloclass="de.hybris.platform.cms2lib.components.BannerComponent"
+				autocreate="false" generate="false">
+				<attributes>
+					<attribute type="localized:java.lang.String" qualifier="subContent">
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+
+			<itemtype code="SimpleBannerComponent" autocreate="false"
+				generate="false" extends="AbstractBannerComponent"
+				jaloclass="de.hybris.platform.acceleratorcms.jalo.components.SimpleBannerComponent">
+				<attributes>
+					<attribute type="localized:java.lang.String" qualifier="subContent">
+						<persistence type="property" />
+					</attribute>
+				</attributes>
+			</itemtype>
+
+		</typegroup>
+
+		<typegroup name="VitfinderCMSComponents">
+			<itemtype code="SimpleHomeBannerComponent" autocreate="true"
+				generate="true" extends="CMSTabParagraphComponent">
+				<attributes>
+					<attribute type="localized:java.lang.String" qualifier="subTitle">
+						<persistence type="property"></persistence>
+					</attribute>
+					<attribute type="localized:Media" qualifier="logo">
+						<persistence type="property"></persistence>
+					</attribute>
+					<attribute type="java.lang.String" qualifier="bgColor">
+						<persistence type="property"></persistence>
+					</attribute>
+					<attribute type="localized:java.lang.String" qualifier="subContent">
+						<persistence type="property"></persistence>
+					</attribute>
+					<attribute type="java.lang.String" qualifier="url">
+						<persistence type="property"></persistence>
+					</attribute>
+					<attribute qualifier="styleAttributes" type="java.lang.String">
+						<description>Can store custom styling attributes for additional styling</description>
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+
+					<attribute qualifier="styleHeartAttributes" type="java.lang.String">
+						<description>Can store custom styling attributes for additional styling</description>
+						<persistence type="property" />
+						<modifiers optional="true" />
+					</attribute>
+				</attributes>
+			</itemtype>
+			<itemtype code="VitfinderHomeBannerComponent" autocreate="true"
+				generate="true" extends="CMSLinkComponent">
+				<attributes>
+					<attribute type="localized:java.lang.String" qualifier="subTitle">
+						<persistence type="property"></persistence>
+					</attribute>
+					<attribute type="java.lang.String" qualifier="bgColor">
+						<persistence type="property"></persistence>
+					</attribute>
+					<attribute type="localized:java.lang.String" qualifier="subContent">
+						<persistence type="property"></persistence>
+					</attribute>
+				</attributes>
+			</itemtype>
+
+		</typegroup>
+	</itemtypes>
+</items>

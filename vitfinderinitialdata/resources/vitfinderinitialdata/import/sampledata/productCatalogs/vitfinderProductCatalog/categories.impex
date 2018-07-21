@@ -1,0 +1,44 @@
+# ImpEx for Importing Categories into Vitfinder Store
+
+# Macros / Replacement Parameter definitions
+$productCatalog=vitfinderProductCatalog
+$productCatalogName=vitfinder Product Catalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$classCatalogVersion=catalogversion(catalog(id[default='vitfinderClassification']),version[default='1.0'])[unique=true,default='vitfinderClassification:1.0']
+$classSystemVersion=systemVersion(catalog(id[default='vitfinderClassification']),version[default='1.0'])[unique=true]
+$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
+$supercategories=source(code, $classCatalogVersion)[unique=true]
+$categories=target(code, $catalogVersion)[unique=true]
+$attribute=classificationAttribute(code,$classSystemVersion)[unique=true]
+$unit=unit(code,$classSystemVersion)
+
+# Create Categories
+INSERT_UPDATE Category;code[unique=true];$catalogVersion;supercategories(code,$catalogVersion);genericCategory;allowedPrincipals(uid)[default='customergroup'];
+;cat-00-001;;;true
+;myprotein;
+;123;;myprotein
+;137;;myprotein
+;248;;myprotein
+;626;;myprotein
+;147;;myprotein
+;179;;myprotein
+;247;;myprotein
+;251;;myprotein
+;171;;myprotein
+;100;;myprotein
+
+# Insert Classifications
+INSERT_UPDATE ClassificationClass;$classCatalogVersion;code[unique=true];allowedPrincipals(uid)[default='customergroup'];;;;;
+
+
+# Insert Classification Attributes
+INSERT_UPDATE ClassificationAttribute;$classSystemVersion;code[unique=true];;;;;;
+
+
+# Links ClassificationClasses to Categories
+INSERT_UPDATE CategoryCategoryRelation;$categories;$supercategories;;;;;;
+
+
+INSERT_UPDATE ClassAttributeAssignment;$class;$attribute;position;$unit;attributeType(code[default=string]);multiValued[default=false];range[default=false];localized[default=true];listable[default=true]
+
+

@@ -1,0 +1,55 @@
+# ImpEx for Importing Categories into Vitfinder Store
+
+# Macros / Replacement Parameter definitions
+$productCatalog=vitfinderProductCatalog
+$productCatalogName=vitfinder Product Catalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$classCatalogVersion=catalogversion(catalog(id[default='vitfinderClassification']),version[default='1.0'])[unique=true,default='vitfinderClassification:1.0']
+$classSystemVersion=systemVersion(catalog(id[default='vitfinderClassification']),version[default='1.0'])[unique=true]
+$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
+$supercategories=source(code, $classCatalogVersion)[unique=true]
+$categories=target(code, $catalogVersion)[unique=true]
+$attribute=classificationAttribute(code,$classSystemVersion)[unique=true]
+$unit=unit(code,$classSystemVersion)
+
+
+# Insert Classifications
+INSERT_UPDATE ClassificationClass;$classCatalogVersion;code[unique=true];allowedPrincipals(uid)[default='customergroup'];;;;;
+;;myprotein-nutrition-class-00-001;;;;;;
+
+# Insert Classification Attributes
+INSERT_UPDATE ClassificationAttribute;$classSystemVersion;code[unique=true];ri;;;;;
+;;vitaminA;49%;
+;;vitaminB;
+;;vitaminC;50%;
+;;vitaminB6;51%;
+;;vitaminB12;
+;;thaimin;55%;
+;;niacin;50%;
+;;folicAcid;51%;
+;;magnesium;50%;
+;;iron;50%;
+;;zinc;50%;
+;;iodin;50%;
+;;vitaminE;50%;
+;;Riboflavin;50%;
+
+INSERT_UPDATE ClassAttributeAssignment;$class;$attribute;position;$unit;attributeType(code[default=number]);multiValued[default=false];range[default=true];localized[default=true];listable[default=true]
+;myprotein-nutrition-class-00-001;vitaminA;0;103;;;;
+;myprotein-nutrition-class-00-001;vitaminB;1;104;;;;
+;myprotein-nutrition-class-00-001;vitaminC;2;100;;;;
+;myprotein-nutrition-class-00-001;vitaminB6;3;104;;;;
+;myprotein-nutrition-class-00-001;vitaminB12;4;104;;;;
+;myprotein-nutrition-class-00-001;thaimin;5;100;;;;
+;myprotein-nutrition-class-00-001;niacin;6;101;;;;
+;myprotein-nutrition-class-00-001;folicAcid;7;104;;;;
+;myprotein-nutrition-class-00-001;magnesium;8;100;;;;
+;myprotein-nutrition-class-00-001;iron;9;100;;;;
+;myprotein-nutrition-class-00-001;zinc;10;100;;;;
+;myprotein-nutrition-class-00-001;iodin;11;104;;;;
+
+# Links ClassificationClasses to Categories
+INSERT_UPDATE CategoryCategoryRelation;$categories;$supercategories;;;;;;
+;123;myprotein-nutrition-class-00-001;;;;;;
+;cat-00-001;myprotein-nutrition-class-00-001;;;;;;
+  

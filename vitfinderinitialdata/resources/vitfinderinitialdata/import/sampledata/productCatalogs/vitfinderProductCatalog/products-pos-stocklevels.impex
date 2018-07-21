@@ -1,0 +1,73 @@
+# ImpEx for Importing Products Store Stock Levels into Apparel Store
+
+# Macros / Replacement Parameter definitions
+$productCatalog=vitfinderProductCatalog
+$productCatalogName=Vitfinder Product Catalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$vendor=vitfinder
+
+# Create some Warehouses for the Vendor
+INSERT_UPDATE Warehouse;code[unique=true];vendor(code)[default=$vendor];default[default='false']
+;Bedford
+;Birmingham Hospital
+;Birmingham Kathedrale
+;Birmingham Park
+;Birmingham Symphony Hall
+;Birmingham Villa Park
+;Cambridge Coldhams
+;Cambridge Hospital
+;Cambridge Lakes Golf Course
+;Cambridge Museum
+;Cambridge University
+;Cardiff Castle
+;Cardiff City Stadium
+;Cardiff Museum
+;Cardiff Park
+;Cardiff University
+;Carlton
+;Edinburgh Castle
+;Edinburgh Dynamic Earth
+;Edinburgh Hospital
+;Edinburgh Park
+;Edinburgh University
+;Glasgow
+;Glasgow Hospital
+;Glasgow Ibrox Park
+;Glasgow Kathedrale
+;Glasgow University
+;Jersey
+;Leeds
+;Leeds Cockpit
+;Leeds Moor
+;Leeds Stadium
+;Leeds Victoria Quarter
+;London Greenwich Park
+;London Hospital
+;London Hyde Park
+;London School
+;London Theater
+;Manchester
+;Manchester dental Hospital
+;Manchester Holiday Inn
+;Manchester Hospital
+;Manchester United FC
+;Newcastle upon Tyne College
+;Newcastle upon Tyne Gallery
+;Newcastle upon Tyne Hospital
+;Newcastle upon Tyne Kathedrale
+;Newcastle upon Tyne University
+;Nottingham
+;Nottingham Concert Hall
+;Nottingham Hospital
+;Nottingham Ice Center
+;Nottingham University
+;Sheffield
+;Sheffield Arena
+;Sheffield Hospital
+;Sheffield Kathedrale
+;Sheffield United FC
+;St Peter Port
+;Trinity
+
+INSERT_UPDATE StockLevel;available;warehouse(code)[default='Birmingham Hospital',unique=true];inStockStatus(code)[default='notSpecified'];overSelling;preOrder;productCode[unique=true];reserved
+###;16;;forceOutOfStock;0;0;300026689;0

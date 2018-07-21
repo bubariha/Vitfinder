@@ -1,0 +1,21 @@
+#******************************This file is generated - please do not edit it. It will be regenerated after every build.********************************#
+# ImpEx template for Importing all Localisations for Products in the Vitfinder Store
+
+# Macros / Replacement Parameter definitions
+$lang=en_GB
+$catalogVersion=catalogVersion(catalog(id[default='vitfinderProductCatalog']),version[default='Staged'])[unique=true,default='vitfinderProductCatalog:Staged']
+
+
+# Update allProducts with localisations
+UPDATE VitfinderGenericProduct;code[unique=true];$catalogVersion;name[lang=$lang];summary[lang=$lang];description[lang=$lang]
+ ;G000000001;;Bone health combination supplements;<p> Provides at least 400 mg calcium per dose. Provides at least 200 mg magnesium per dose. Provides at least 400 IU (10 µg) vitamin D per dose.Preferably: also contains zinc and boron</p>
+ ;G000000002;;Vitamin D;<p>Supplement provides between 1000 IU (=25µg) and 2000 IU (= 50µg) of vitamin D per dose.</p>
+ ;G000000003;;Vegan-friendly Vitamin D;<p> Product provides between 1000 IU (=25µg) and 2000 IU (=50µg) of vitamin D per dose</p>
+ ;G000000004;;Vitamin K2;<p> Provides at least 50µg (mcg) of vitamin K2 per dose and DOES NOT contain calcium and DOES NOT contain vitamin D.</p>
+ ;G000000005;;Vitamin C;<p> Contains 500–1000mg of vitamin C per dose.</p>
+ ;G000000006;;Fish oil;<p> Contains fish oil. Contains EPA ≥ 180 mg per capsule or dose Contains DHA ≥ 120mg per capsule or dose </p>
+ ;G000000007;;Protein powder;<p> What we need here is to exclude any protein powders that are either designed for weight loss, or for sport or for muscle gain. The easiest way to do this may be to create a category called ‘Plain proteins’ or ‘Non-sports proteins’ or similar, into which we can put all these products. </p>
+ ;G000000008;;Vegan-friendly protein powder;<p> What we need here is to exclude any protein powders that are either designed for weight loss, or for sport or for muscle gain. The easiest way to do this may be to create a category called ‘Plain proteins’ or ‘Non-sports proteins’ or similar, into which we can put all these products.</p>
+ ;G000000009;;Collagen;<p> Supplement that provides at least 3000mg collagen per daily dose and DOES NOT contain glucosamine and DOES NOT contain chondroitin</p>
+ ;G000000010;;Greens;<p> We may need to create a category and manually add products as there are not set ingredients that will be in every product. For example one supplement may contain spirulina only, one supplement may contain chlorella only, one supplement may contain wheat grass only, other products may be combinations of all of these.</p>
+ 

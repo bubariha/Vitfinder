@@ -1,0 +1,10 @@
+#
+# Import the Vitfinder UK Store
+#
+
+# Language
+$lang=en_GB
+
+# Create Base Store
+UPDATE BaseStore;uid[unique=true];name[lang=$lang]
+ ;vitfinder;"Vitfinder Store"

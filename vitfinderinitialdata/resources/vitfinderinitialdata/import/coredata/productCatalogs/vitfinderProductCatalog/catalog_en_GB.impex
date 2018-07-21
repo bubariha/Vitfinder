@@ -1,0 +1,10 @@
+#
+# Import the vitfinder Product Catalog
+#
+
+# Language
+$lang=en_GB
+
+# Create Catalog
+UPDATE Catalog;id[unique=true];name[lang=$lang]
+ ;vitfinderProductCatalog;"vitfinder Product Catalog"

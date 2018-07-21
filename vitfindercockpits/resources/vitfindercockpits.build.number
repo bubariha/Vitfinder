@@ -1,0 +1,9 @@
+#Ant properties
+#Fri Mar 04 10:37:32 CET 2016
+builddate=20160304 1037
+description=vitfindercockpits
+name=vitfindercockpits
+releasedate=20150915 1445
+vendor=hybris
+version=5.7.0.8
+version.api=5.7.0

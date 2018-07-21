@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2015 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="beans.xsd">
+
+	<bean class="de.hybris.platform.commercefacades.product.data.ProductData" >
+		<property name="genders" type="java.util.List&lt;com.vitfinder.facades.product.data.GenderData>"/>
+		<property name="ean" type="java.lang.String"/>
+		<property name="promotionalMessage" type="String"/>
+		<property name="merchantURL" type="String"/>
+		<property name="retailer" type="String"/>
+	</bean>
+
+	<bean class="com.vitfinder.facades.product.data.GenderData">
+		<property name="code" type="String"  />
+		<property name="name" type="String"/>
+	</bean>
+	
+	<bean class="de.hybris.platform.commercefacades.user.data.RegisterData">
+	<property name="address" type ="de.hybris.platform.commercefacades.user.data.AddressData"/>
+	<property name="communicationPreferences" type="java.util.List&lt;java.lang.String>"></property>
+	</bean>
+	
+	<bean class="com.vitfinder.facades.user.data.CommunicationPreferenceData">
+	<property name="code" type="String"/>
+		<property name="listOfPreference" type="java.util.List&lt;java.lang.String>"/>
+		<property name="remainder" type="java.lang.Integer"/>
+	</bean>
+	<bean class="de.hybris.platform.commercefacades.user.data.CustomerData"
+	      extends="de.hybris.platform.commercefacades.user.data.PrincipalData">
+		<property name="communicationPreferences" type="com.vitfinder.facades.user.data.CommunicationPreferenceData"/>
+	</bean>
+	
+	<bean class="de.hybris.platform.commercefacades.product.data.FeatureData">
+		<property name="ri" type="String"/>
+		<property name="safeUpperLimit" type="java.lang.Double"/>
+		
+	</bean>
+	
+	    <bean class="com.vitfinder.core.SafeUpperLimitData">
+        <property name="ingredient" type="de.hybris.platform.commercefacades.product.data.FeatureData"/>
+        <property name="cartQty" type="java.lang.Double"/>
+        <property name="safeUpperLimit" type="java.lang.Double"/>
+    </bean>
+    
+     <bean class="com.vitfinder.core.RetailerData">
+        <property name="code" type="java.lang.String"/>
+        <property name="name" type="java.lang.String"/>
+        <property name="description" type="java.lang.String"/>
+        <property name="thumbnail" type="de.hybris.platform.commercefacades.product.data.ImageData"/>
+    </bean>
+    
+    <bean class="de.hybris.platform.commercefacades.order.data.CartData" extends="de.hybris.platform.commercefacades.order.data.AbstractOrderData">
+        <property name="safeUpperLimits" type="java.util.List&lt;com.vitfinder.core.SafeUpperLimitData>"/>
+        <property name="retailerBaskets" type="java.util.List&lt;de.hybris.platform.commercefacades.order.data.CartData>"/>
+        <property name="retailer" type="com.vitfinder.core.RetailerData"/>
+        <property name="basketSorts" type="java.util.List&lt;com.vitfinder.core.BasketSortsData>"/>
+        
+    </bean>
+	
+	
+	<bean class="de.hybris.platform.commercefacades.product.data.PriceData">
+		<property name="wasPrice" type="java.math.BigDecimal"/>
+		<property name="discountValue" type="String"/>
+		<property name="formattedWasPrice" type="String"/>
+		<property name="savePrice" type="java.math.BigDecimal"/>
+		<property name="formattedSavePrice" type="String"/>
+	</bean>
+	
+	<bean class="com.vitfinder.core.BasketSortsData" >
+		<property name="code" type="String"/>
+		<property name="name" type="String"/>
+		<property name="beanId" type="String"/>
+	</bean>
+	
+	<bean class="de.hybris.platform.commerceservices.service.data.CommerceCartParameter">
+		<property name="genericProduct" type="com.vitfinder.core.model.VitfinderGenericProductModel">
+			<description>The Generic product model</description>
+		</property>
+	</bean>
+	
+	<bean class="de.hybris.platform.commercefacades.product.data.CategoryData">
+		<property name="last" type="boolean"/>
+		<property name="symptoms" type="boolean"/>
+		<property name="subCategories" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.CategoryData>"></property>
+	</bean>
+	
+	<bean class="com.vitfinder.core.QuestionaryData">
+		<property name="symptoms" type="de.hybris.platform.commercefacades.product.data.CategoryData" />
+		<property name="recommendations" type="de.hybris.platform.commercefacades.product.data.CategoryData" />
+		<property name="recommendedProducts" type="java.util.List&lt;de.hybris.platform.commercefacades.product.data.ProductData>"></property>
+		<property name="recommendedDate" type="java.util.Date"></property>
+		<property name="pk" type="String"/>
+	</bean>
+	
+</beans>

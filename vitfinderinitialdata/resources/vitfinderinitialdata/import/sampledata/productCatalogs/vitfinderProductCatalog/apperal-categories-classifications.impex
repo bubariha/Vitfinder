@@ -1,0 +1,55 @@
+# Macros / Replacement Parameter definitions
+
+# Macros / Replacement Parameter definitions
+$productCatalog=vitfinderProductCatalog
+$productCatalogName=vitfinder Product Catalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$classCatalogVersion=catalogversion(catalog(id[default='vitfinderClassification']),version[default='1.0'])[unique=true,default='vitfinderClassification:1.0']
+$classSystemVersion=systemVersion(catalog(id[default='vitfinderClassification']),version[default='1.0'])[unique=true]
+$class=classificationClass(ClassificationClass.code,$classCatalogVersion)[unique=true]
+$supercategories=source(code, $classCatalogVersion)[unique=true]
+$categories=target(code, $catalogVersion)[unique=true]
+$attribute=classificationAttribute(code,$classSystemVersion)[unique=true]
+$unit=unit(code,$classSystemVersion)
+
+# Insert Classifications
+INSERT_UPDATE ClassificationClass;$classCatalogVersion;code[unique=true];allowedPrincipals(uid)[default='customergroup'];;;;;
+;;class-00-001;;;;;;
+;;class-00-002;;;;;;
+;;class-00-003;;;;;;
+;;class-00-004;;;;;;
+;;class-00-005;;;;;;
+;;class-00-006;;;;;;
+;;class-00-007;;;;;;
+;;class-00-008;;;;;;
+;;class-00-009;;;;;;
+;;class-00-010;;;;;;
+
+
+# Insert Classification Attributes
+INSERT_UPDATE ClassificationAttribute;$classSystemVersion;code[unique=true];;;;;;
+;;calcium
+;;magnesium
+;;vitamin-D
+;;zinc
+;;boron
+;;vegan
+;;vitamin-C 
+;;fish-oil
+;;EPA
+;;DHA
+;;glucosamine
+;;chondroitin
+
+# Links ClassificationClasses to Categories
+INSERT_UPDATE CategoryCategoryRelation;$categories;$supercategories;;;;;;
+;cat-00-001;class-00-001;;;;;;
+
+INSERT_UPDATE ClassAttributeAssignment;$class;$attribute;position;$unit;attributeType(code[default=string]);multiValued[default=false];range[default=false];localized[default=true]
+;class-00-001;calcium;0;;;;;
+;class-00-001;magnesium;1;;;;;
+;class-00-001;vitamin-D;2;;;;;
+;class-00-001;zinc;3;;;;;
+;class-00-001;boron;4;;;;;
+ 
+  

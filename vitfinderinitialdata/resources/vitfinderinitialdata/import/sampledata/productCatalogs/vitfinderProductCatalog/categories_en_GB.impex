@@ -1,0 +1,27 @@
+#******************************This file is generated - please do not edit it. It will be regenerated after every build.********************************#
+# ImpEx for Importing Categories into vitfinder Store 
+
+# Macros / Replacement Parameter definitions
+$catalogVersion=catalogVersion(catalog(id[default='vitfinderProductCatalog']),version[default='Staged'])[unique=true,default='vitfinderProductCatalog:Staged']
+
+# Language
+$lang=en_GB
+
+
+# Create Categories
+UPDATE Category;code[unique=true];name[lang=$lang];description[lang=$lang];$catalogVersion
+ ;cat-00-001;Bone health combination supplements;
+ ;myprotein;My Protein;
+ ;123;Nutrition;
+;137;Men's Clothing;
+;248;Other Sports;
+;626;General Clothing;
+;147;Men's Accessories;
+;179;Men's Tops;
+;247;Fitness;
+;251;Sportswear & Swimwear;
+;171;Men's Outerwear;
+;100;Bodycare & Fitness;
+
+UPDATE Category;$catalogVersion;code[unique=true];name[lang=$lang];description[lang=$lang];genericCategory[default=false]
+;;cat-00-001;Bone health combination supplements;true

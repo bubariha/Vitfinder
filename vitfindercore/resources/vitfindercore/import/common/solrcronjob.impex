@@ -1,0 +1,12 @@
+ 
+INSERT_UPDATE SolrIndexerHotUpdateCronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode);indexTypeName;facetSearchConfig(name)
+;hotupdate-vitfinder;solrIndexerHotUpdateJob;false;en_GB;Product;vitfinderIndex
+
+INSERT_UPDATE SolrIndexerCronJob; code[unique=true];job(code);singleExecutable;sessionLanguage(isocode);facetSearchConfig(name)
+;full-vitfinder;solrIndexerJob;false;en_GB;vitfinderIndex
+ 
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+; hotupdate-vitfinder; 30 * * * * ?
+
+INSERT_UPDATE Trigger;cronjob(code)[unique=true];cronExpression
+; full-vitfinder; 50 * * * * ?

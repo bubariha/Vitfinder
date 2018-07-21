@@ -1,0 +1,413 @@
+# 
+# ImpEx for Responsive Vitfinder UK Site CMS Content 
+# 
+$contentCatalog=vitfinderContentCatalog 
+$contentCV=catalogVersion(CatalogVersion.catalog(Catalog.id[default=$contentCatalog]),CatalogVersion.version[default=Staged])[default=$contentCatalog:Staged] 
+ 
+$productCatalog=vitfinderProductCatalog 
+$productCatalogName=Vitfinder Product Catalog 
+$productCV=catalogVersion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged] 
+$picture=media(code, $contentCV) ;
+$siteResource=jar:com.vitfinder.initialdata.constants.VitfinderInitialDataConstants&/vitfinderinitialdata/import/sampledata/contentCatalogs/$contentCatalog
+$jarResourceCms=jar:com.vitfinder.initialdata.constants.VitfinderInitialDataConstants&/vitfinderinitialdata/import/sampledata/cockpits/cmscockpit
+
+
+
+# Load the storefront context root config param
+$storefrontContextRoot=$config-storefrontContextRoot
+
+##  Remove the language currency component from the search and place a tag in the footer
+# CMS SearchBox Components
+INSERT_UPDATE SearchBoxComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef
+;;SearchBox;Search Box;SearchBox
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
+;;SearchBoxSlot;SearchBox
+
+INSERT_UPDATE FooterComponent;$contentCV[unique=true];uid[unique=true];wrapAfter;showLanguageCurrency
+;;FooterComponent;2;true
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];altText;&imageRef;folder(qualifier)[default='images']
+;;1001120;$siteResource/images/banners/homepage/banner-1.jpg;image/jpg;;;
+;;1001121;$siteResource/images/banners/homepage/banner-2.jpg;image/jpg;;;
+;;1001122;$siteResource/images/banners/homepage/t-shirt_vitfinder.jpg;image/jpg;;;
+
+;;1001127;$siteResource/images/banners/homepage/fitbit.logo.png;image/png;;;
+;;1001128;$siteResource/images/banners/homepage/fitbit.logo1.png;image/png;;;
+;;1001129;$siteResource/images/banners/homepage/fitbit.logo1.png;image/png;;;
+
+
+INSERT_UPDATE BannerComponent;$contentCV[unique=true];uid[unique=true];name;&componentRef;urlLink;Headline;media(code, $contentCV);
+;;banner-1;Banner-1;banner-1;/c/myprotein;Proteins;1001120;
+;;banner-2;Banner-2;banner-2;/c/123;Nutrition;1001121;
+;;t-shirt_vitfinder;t-shirt_Banner;Clothing;/c/247;1001122;
+
+;;banner-7;Banner-7;banner-7;https://www.fitbit.com/in;Fitbit;1001127;
+;;banner-8;Banner-8;banner-8;https://www.fitbit.com/in/charge;Fitbit Charge;1001128;
+;;banner-9;Banner-9;banner-9;https://www.fitbit.com/in/blaze;Fitbit Blaze;1001129;
+
+INSERT_UPDATE SimpleBannerComponent;$contentCV[unique=true];uid[unique=true];media(code, $contentCV);
+;;t-shirt_vitfinderBanner;1001122;
+
+INSERT_UPDATE RotatingImagesComponent;$contentCV[unique=true];uid[unique=true];name;banners(&componentRef);&componentRef
+;;homePageRotaingImagesComponent;Wakey Early Raiser RotatingImagesComponent;banner-1,banner-2;homePageRotaingImagesComponent
+;;homePagefitBitRotatingImagesComponent;Fit Bit Rotating Images Component;banner-7,banner-8,banner-9;homePagefitBitRotatingImagesComponent
+
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];folder(qualifier)[default='images'];altText
+;;/images/logos/logo1;homeLogo1.png;$siteResource/images/logos/logo1.png;image/png;;"hybris Accelerator"
+;;/images/logos/logo2;homeLogo2.png;$siteResource/images/logos/logo2.png;image/png;;"hybris Accelerator"
+;;/images/logos/logo3;homeLogo3.png;$siteResource/images/logos/logo3.png;image/png;;"hybris Accelerator"
+
+INSERT_UPDATE SimpleHomeBannerComponent;$contentCV[unique=true];uid[unique=true];url;name;styleAttributes;title[lang=en];subContent;bgColor;logo(code, $contentCV);content[lang=en]
+;;component1;/questionary/allSymptoms/root-category;component1;class="fa fa-check-square-o",class="fa fa-heart",;Personal;Health Check;#32CD32;/images/logos/logo1;A five minute questionnaire to determine the vitamins you need to stay up-to-speed
+;;component2;/c/myprotein;component2;class="fa fa-shopping-basket";Vitamin;Shop;#9ACD32;/images/logos/logo2;Got a good idea what you need? Browse the latest products and best offers
+;;component3;/questionary/generalConditions/root-category;component3;class="fa fa-medkit";Common Condition;Treatments;#C0C0C0;/images/logos/logo3;Obis am aut voluptatia natia dipidit officab oremquunt, volor anis rescidia con rem nobite dolorei
+
+# ContentSlot 
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;homeBannerSlot;component1,component2,component3
+
+#################    HOME PAGE START     #################  
+
+###  Home page splash Slot 1  #######
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+;;VitfinderHompageSplashBannerComponent;Vitfinder Homepage Splash Banner Component;/Nutrition/c/123;VitfinderHompageSplashBannerComponent
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+;;AppareUKHompageSaveBannerComponent;Vitfinder Homepage Banner Component;/Men's Clothing/c/137;AppareUKHompageSaveBannerComponent
+
+#INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+#;;Section1Slot-VitfinderHomepage;true;VitfinderHompageSplashBannerComponent,AppareUKHompageSaveBannerComponent
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+;;Section1Slot-VitfinderHomepage;true;homePageRotaingImagesComponent
+
+
+
+###  Home page slot 2A  ####
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+;;VitfinderHompageWomenStreetBannerComponent;Vitfinder Homepage Banner Component;/My-Protein/Fitness/c/247;VitfinderHompageWomenStreetBannerComponent
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+;;VitfinderHompageMenStreetBannerComponent;Vitfinder Homepage Banner Component;/My-Protein/Nutrition/c/123;VitfinderHompageMenStreetBannerComponent
+
+#INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+#;;Section2ASlot-VitfinderHomepage;true;VitfinderHompageWomenStreetBannerComponent,VitfinderHompageMenStreetBannerComponent
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+;;Section2ASlot-VitfinderHomepage;true;t-shirt_vitfinderBanner
+
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section2A-VitfinderHomepage;Section2A;;Section2ASlot-VitfinderHomepage;;;
+
+#### Home section 2B #######
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+;;VitfinderHompageStreetYouthBannerComponent;Vitfinder Homepage Youth Shorts Banner Component;/My-Protein/Bodycare-%26-Fitness/c/100;VitfinderHompageStreetYouthBannerComponent
+
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+;;VitfinderHompageBrandsBannerComponent;Vitfinder Homepage Brands Banner Component Child;/Other-Sports/c/248;VitfinderHompageBrandsBannerComponent
+
+#INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+#;;Section2BSlot-Homepage;true;VitfinderHompageStreetYouthBannerComponent,VitfinderHompageBrandsBannerComponent
+
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+;;Section2BSlot-Homepage;true;homePagefitBitRotatingImagesComponent
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section2B-VitfinderHomepage;Section2B;;Section2BSlot-Homepage;;;
+
+## Home section 3
+INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);scroll(code);popup;&componentRef
+;;VitfinderHomepageProductCarouselComponent;Best Selling Products;703044771,703045095,703045109,3140008825,703045159,703044295,703044297;allVisible;false;VitfinderHomepageProductCarouselComponent
+
+INSERT_UPDATE ProductCarouselComponent;$contentCV[unique=true];uid[unique=true];name;products(code,$productCV);scroll(code);popup;&componentRef
+;;NewVitfinderHomepageProductCarouselComponent;What's New Vitfinder Homepage Product Carousel;703893829,704220891,703044401,703044487,703044773,703544909,703044403;allVisible;false;NewVitfinderHomepageProductCarouselComponent
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef)
+;;Section3Slot-Homepage;component1,component2,component3
+
+#INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+#;;Section3Slot-Homepage;Section3;;Section3Slot-Homepage;;;
+
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section1-Banners;Section3;;homeBannerSlot;;;
+
+
+#### Section 4
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+;;VitfinderHompageSmDiscountBannerComponent;Vitfinder Homepage Banner Component;/Nutrition/My-Noodles%2C-Konjac-Flour%2C-6-x-100g/p/3337097917;VitfinderHompageSmDiscountBannerComponent
+;;VitfinderHompageShopBannerComponent;Vitfinder Homepage Shop Banner Component;/Nutrition/My-Spaghetti%2C-Konjac-Flour%2C-6-x-100g/p/3337097633;VitfinderHompageShopBannerComponent
+;;VitfinderHompageShipmentBannerComponent;Vitfinder Homepage Shipment Banner Component;/Nutrition/My-Fettuccine%2C-Konjac-Flour%2C-6-x-100g/p/3337097897;VitfinderHompageShipmentBannerComponent
+;;VitfinderHompageServiceBannerComponent;Vitfinder Homepage Service Banner Component;/Nutrition/My-Fettuccine%2C-Konjac-Flour%2C-6-x-100g/p/3337097897;VitfinderHompageServiceBannerComponent
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+;;Section4Slot-Homepage;true;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section4Slot-Homepage;Section4;;Section4Slot-Homepage;;;
+
+#### Section 5
+## Home section 2C
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+;;VitfinderHompageFreeDelBannerComponent;Vitfinder Homepage Free Delivery Banner Component;/faq;VitfinderHompageFreeDelBannerComponent
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+;;Section5Slot-Homepage;true;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='homepage'];contentSlot(uid,$contentCV)[unique=true];;;
+;;Section5Slot-Homepage;Section5;;Section5Slot-Homepage;;;
+
+
+
+
+
+
+
+
+#################    HOME PAGE END     #################
+
+#################    MY ACCOUNT START    #################
+
+#### Remove everything related to my account home page and profile overview page for responsive
+
+REMOVE ContentSlot;$contentCV[unique=true];uid[unique=true]
+;;SideContent-Account
+;;SideContent-profile
+
+REMOVE ContentPage;$contentCV[unique=true];uid[unique=true]
+;;account
+;;profile
+
+##### Add AccountOrderDetailsActionsComponent
+INSERT_UPDATE JspIncludeComponent;$contentCV[unique=true];uid[unique=true];name;page;actions(uid,$contentCV);&componentRef
+;;AccountOrderDetailsHeadlineComponent;Account Order Details Headline Component;accountOrderDetailHeadline.jsp;;AccountOrderDetailsHeadlineComponent
+;;AccountOrderDetailsTotalsComponent;Account Order Details Order Totals Component;accountOrderDetailOrderTotals.jsp;;AccountOrderDetailsTotalsComponent
+;;AccountOrderDetailsShippingComponent;Account Order Details Shipping Info Component;accountOrderDetailShippingInfo.jsp;;AccountOrderDetailsShippingComponent
+;;AccountOrderDetailsItemsComponent;Account Order Details Items Info Component;accountOrderDetailItems.jsp;;AccountOrderDetailsItemsComponent
+;;AccountOrderDetailsActionsComponent;Account Order Details Actions Component;accountOrderDetailActions.jsp;;AccountOrderDetailsActionsComponent
+
+# vtf 67
+INSERT_UPDATE AddToCartAction;$contentCV[unique=true];uid[unique=true];url;name;restrictions(uid,$contentCV);&actionRef
+;;AddToCartAction;/cart/add;Product Add To Cart Action;ActionRestriction;AddToCartAction
+
+INSERT_UPDATE PickUpInStoreAction;$contentCV[unique=true];uid[unique=true];url;name;restrictions(uid,$contentCV);&actionRef
+;;PickUpInStoreAction;/store-pickup/{productCode}/pointOfServices;Pickup in Store Action;ActionRestriction;PickUpInStoreAction
+
+INSERT_UPDATE ShareOnSocialNetworkAction;$contentCV[unique=true];uid[unique=true];url;name;restrictions(uid,$contentCV);&actionRef
+;;ShareOnSocialNetworkAction;/;Share On Social Network Action;ActionRestriction;ShareOnSocialNetworkAction
+
+INSERT_UPDATE ProductAddToCartComponent;$contentCV[unique=true];uid[unique=true];name;actions(&actionRef);&componentRef
+;;AddToCart;Product Add To Cart;AddToCartAction,PickUpInStoreAction,ShareOnSocialNetworkAction;AddToCart
+
+
+###### Empty account page SideContent and BodyContent slots
+UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef);
+;;SideContent-payment-details;;
+;;SideContent-address-book;;
+;;SideContent-add-edit-address;;
+;;SideContent-orders;;
+;;SideContent-orderdetail;;
+;;SideContent-updatePassword;;
+;;SideContent-update-profile;;
+;;SideContent-update-email;;
+;;BodyContent-orderdetail;AccountOrderDetailsHeadlineComponent,AccountOrderDetailsItemsComponent,AccountOrderDetailsShippingComponent,AccountOrderDetailsTotalsComponent,AccountOrderDetailsActionsComponent,AddToCart;
+
+
+#################    MY ACCOUNT END    #################
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(uid, $contentCV)
+;;TopContentSlot-cartPage;Top Content Slot for Cart Page;true;CartComponent
+
+INSERT_UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];masterTemplate(uid,$contentCV);
+;;SnowCategoryPage;ProductGridPageTemplate;
+
+INSERT_UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];masterTemplate(uid,$contentCV);
+;;StreetCategoryPage;ProductGridPageTemplate;
+
+# Site Logo
+INSERT_UPDATE Media;$contentCV[unique=true];code[unique=true];realfilename;@media[translator=de.hybris.platform.impex.jalo.media.MediaDataTranslator];mime[default='image/jpeg'];altText;folder(qualifier)[default='images']
+;;/images/theme/logo-hybris-responsive.png;logo-hybris-responsive.png;$siteResource/images/theme/logo-hybris-responsive.png;image/png;hybris Accelerator;
+
+### Checkout Login
+INSERT_UPDATE JspIncludeComponent;$contentCV[unique=true];uid[unique=true];&componentRef
+;;ReturningCustomerCheckoutLoginComponent;ReturningCustomerCheckoutLoginComponent
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(&componentRef);;;
+;;LeftContentSlot-checkout-login;ReturningCustomerCheckoutLoginComponent;;;
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='checkout-login'];contentSlot(uid,$contentCV)[unique=true];;;
+;;LeftContentSlot-checkout-login;LeftContentSlot;;LeftContentSlot-checkout-login;;;
+
+# Remove view store action from store finder component
+INSERT_UPDATE JspIncludeComponent;$contentCV[unique=true];uid[unique=true];actions(uid,$contentCV);
+;;StoreFinderComponent;;
+
+# Remove new customer component from the center slot of the checkout login page
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];name;active;cmsComponents(&componentRef);;;
+;;CenterContentSlot-checkout-login;Center Content Slot for Checkout Login;true;;;;
+
+# create cms link components for my account pages
+INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;target(code)[default='sameWindow']
+;;PersonalDetailsLink;PersonalDetailsLink;/my-account/update-profile;PersonalDetailsLink;
+;;UpdateEmailLink;UpdateEmailLink;/my-account/update-email;UpdateEmailLink;
+;;UpdatePasswordLink;UpdatePasswordLink;/my-account/update-password;UpdatePasswordLink;
+;;AddressBookLink;AddressBookLink;/my-account/address-book;AddressBookLink;
+;;PaymentDetailsLink;PaymentDetailsLink;/my-account/payment-details;PaymentDetailsLink;
+;;OrderHistoryLink;OrderHistoryLink;/my-account/orders;OrderHistoryLink;
+;;StudyMyBandLink;StudyMyBandLink;/my-account/study-my-band;StudyMyBandLink;
+;;CommunicationPreferenceLink;CommunicationPreferenceLink;/my-account/update-comm-pref;CommunicationPreferenceLink;
+;;SignInRegisterLink;Sign in / Register;/login;SignInRegisterLink
+;;SignOutSlotLink;Sign Out;/logout;SignOutSlotLink
+
+
+# create navigation root node for my account & child nodes for the root node 
+INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef
+;MyAccountNavNode;;My Account Nav;SiteRootNode;;MyAccountNavNode
+# children for my account
+;PersonalDetailsNavNode;;PersonalDetailsNavNode;MyAccountNavNode;;PersonalDetailsNavNode
+;UpdateEmailNavNode;;UpdateEmailNavNode;MyAccountNavNode;;UpdateEmailNavNode
+;PaymentDetailsNavNode;;PaymentDetailsNavNode;MyAccountNavNode;;PaymentDetailsNavNode
+;ChangePasswordNavNode;;ChangePasswordNavNode;MyAccountNavNode;;ChangePasswordNavNode
+;OrderHistoryNavNode;;OrderHistoryNavNode;MyAccountNavNode;;OrderHistoryNavNode
+;AddressBookNavNode;;AddressBookNavNode;MyAccountNavNode;;AddressBookNavNode
+;UpdateCommPrefNavNode;;UpdateCommPrefNavNode;MyAccountNavNode;;UpdateCommPrefNavNode
+;StudyMyBandNavNode;;StudyMyBandNavNode;MyAccountNavNode;;StudyMyBandNavNode
+
+
+# create cms navigation entry for navigation child nodes
+INSERT_UPDATE CMSNavigationEntry;uid[unique=true];$contentCV[unique=true];name;navigationNode(&nodeRef);item(&linkRef);
+;PersonalDetailsNavNodeEntry;;PersonalDetailsNavNodeEntry;PersonalDetailsNavNode;PersonalDetailsLink;
+;UpdateEmailNavNodeEntry;;UpdateEmailNavNodeEntry;UpdateEmailNavNode;UpdateEmailLink;
+;ChangePasswordNavNodeEntry;;ChangePasswordNavNodeEntry;ChangePasswordNavNode;UpdatePasswordLink;
+;AddressBookNavNodeEntry;;AddressBookNavNodeEntry;AddressBookNavNode;AddressBookLink;
+;PaymentDetailsNavNodeEntry;;PaymentDetailsNavNodeEntry;PaymentDetailsNavNode;PaymentDetailsLink;
+;OrderHistoryNavNodeEntry;;OrderHistoryNavNodeEntry;OrderHistoryNavNode;OrderHistoryLink;
+;UpdateCommPrefNavNodeEntry;;UpdateCommPrefNavNodeEntry;UpdateCommPrefNavNode;CommunicationPreferenceLink;
+;StudyMyBandNavNodeEntry;;StudyMyBandNavNodeEntry;StudyMyBandNavNode;StudyMyBandLink;
+
+
+# create navigation component for my account
+INSERT_UPDATE NavigationComponent;$contentCV[unique=true];uid[unique=true];name;styleClass;&componentRef;navigationNode(&nodeRef)
+;;MyAccountComponent;My Account;accNavComponent;MyAccountComponent;MyAccountNavNode
+
+# create a user restriction
+INSERT_UPDATE CMSUserRestriction;$contentCV[unique=true];&userRestriction;name;uid[unique=true];users(uid)
+;;anonymousUserRestriction;Anonymous User Restriction;anonymousUserRestriction;anonymous
+
+# create a inverse restriction
+INSERT_UPDATE CMSInverseRestriction;$contentCV[unique=true];name;originalRestriction(&userRestriction)[allownull=true];uid[unique=true];components(&componentRef)
+;;Logged in User;anonymousUserRestriction;loggedInUser;MyAccountComponent
+
+# add my account navigation component to a content slot
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];cmsComponents(uid,$contentCV)
+;;HeaderLinksSlot;MyAccountComponent
+;;SignInRegisterSlot;SignInRegisterLink
+;;SignOutSlot;SignOutSlotLink
+##############################################################################################################
+############ remove all the account related links, components and nodes							 #############
+############ remove the INSERT_UPDATE & REMOVE statements when merging with desktop.			 #############
+##############################################################################################################
+REMOVE CMSLinkComponent;uid[unique=true];$contentCV[unique=true]
+;AccountHomeLink;
+;AccountProfileLink;
+;AccountPersonalDetailsLink;
+;AccountUpdatePasswordLink;
+;AccountAddressBookLink;
+;AccountManageAddressLink;
+;AccountPaymentDetailsLink;
+;AccountManagePaymentDetailsLink;
+;AccountOrderHistoryLink;
+;AccountViewOrderHistoryLink;
+
+REMOVE CMSNavigationNode;uid[unique=true];$contentCV[unique=true]
+;AccountProfileNavNode;
+;AccountAddressBookNavNode;
+;AccountPaymentDetailsNavNode;
+;AccountOrderHistoryNavNode;
+;AccountLeftNavNode;
+
+REMOVE AccountNavigationComponent;uid[unique=true];$contentCV[unique=true]
+;AccountLeftNavigationComponent;
+;AccountProfileNavigationComponent;
+;AccountAddressBookNavigationComponent;
+;AccountPaymentDetailsNavigationComponent;
+;AccountOrderHistoryNavigationComponent;
+
+REMOVE AccountNavigationCollectionComponent;uid[unique=true];$contentCV[unique=true]
+;AccountHomepageComponent;
+
+# CMS Paragraph Component (Contact information) 
+REMOVE CMSParagraphComponent;$contentCV[unique=true];uid[unique=true]
+;;ContactInfo
+
+##############################################################################################################
+############ 									end												 #############
+############ 																					 #############
+##############################################################################################################
+
+###### Update the Brands Category Page #####
+
+INSERT_UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved'];previewImage(code, $contentCV)
+
+##### End Update the Brands Category Page #####
+
+###### Vitfinder Snow Category Landing Page ######
+
+INSERT_UPDATE CategoryPage;$contentCV[unique=true];uid[unique=true];name;masterTemplate(uid,$contentCV);defaultPage;approvalStatus(code)[default='approved'];previewImage(code, $contentCV)
+
+INSERT_UPDATE CMSCategoryRestriction;$contentCV[unique=true];uid[unique=true];name;categories(code, $productCV);pages(uid, $contentCV)
+
+##### Section 1 ######
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+;;VitfinderSnowSplashBannerComponent;Snow Splash Banner Component;;VitfinderSnowSplashBannerComponent
+;;VitfinderSnowAccessoriesBannerComponent;Snow Accessories Banner Component;/Men%27s-Tops/c/179;VitfinderSnowAccessoriesBannerComponent
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+;;Section1Slot-Snow;true;VitfinderSnowSplashBannerComponent,VitfinderSnowAccessoriesBannerComponent
+
+##### Section 2 ######																																
+INSERT_UPDATE SimpleResponsiveBannerComponent;$contentCV[unique=true];uid[unique=true];name;urlLink;&componentRef
+;;VitfinderSnowBeanieBannerComponent;Vitfinder Snow Beanie Banner Component;/Nutrition/Instant-Oats---Chocolate-Smooth---2-5kg/p/703044667;VitfinderSnowBeanieBannerComponent
+;;VitfinderSnowKryptonBannerComponent;Vitfinder Snow Krypton Banner Component;/Nutrition/Instant-Oats---Strawberry-Cream---2-5kg/p/703044405;VitfinderSnowKryptonBannerComponent
+;;VitfinderSnowAndoverJcktBannerComponent;Vitfinder Snow Andover Jacket Banner Component;/Nutrition/Instant-Oats---Vanilla---2-5kg/p/703044491;VitfinderSnowAndoverJcktBannerComponent
+;;VitfinderSnowBeaconJcktBannerComponent;Vitfinder Snow Beacon Jacket Banner Component;/Nutrition/Instant-Oats---Unflavoured---5kg/p/703044407;VitfinderSnowBeaconJcktBannerComponent
+;;VitfinderSnowTropeBeanieBannerComponent;Vitfinder Snow Trop Beanie Banner Component;/Nutrition/Citrulline-Malate---Unflavoured---500g/p/703044775;VitfinderSnowTropeBeanieBannerComponent
+;;VitfinderSnowSludgeJcktBannerComponent;Vitfinder Snow Sludge Jacket Banner Component;/Nutrition/Citrulline-Malate---Unflavoured---250g/p/704595476;VitfinderSnowSludgeJcktBannerComponent
+
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+;;Section2Slot-Snow;true;VitfinderSnowBeanieBannerComponent,VitfinderSnowKryptonBannerComponent,VitfinderSnowAndoverJcktBannerComponent,VitfinderSnowBeaconJcktBannerComponent,VitfinderSnowTropeBeanieBannerComponent,VitfinderSnowSludgeJcktBannerComponent
+
+##### Section 3 #####
+INSERT_UPDATE ContentSlot;$contentCV[unique=true];uid[unique=true];active;cmsComponents(&componentRef)
+;;Section3Slot-Snow;true;VitfinderHompageFreeDelBannerComponent
+
+INSERT_UPDATE ContentSlotForPage;$contentCV[unique=true];uid[unique=true];position[unique=true];page(uid,$contentCV)[unique=true][default='SnowCategoryPage'];contentSlot(uid,$contentCV)[unique=true]
+;;Section1-Snow;Section1;;Section1Slot-Snow
+;;Section2-Snow;Section2;;Section2Slot-Snow
+;;Section3-Snow;Section3;;Section3Slot-Snow
+
+###### End Vitfinder Snow Category Landing Page ######
+
+
+# VTF-144
+#INSERT_UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];name;url;&linkRef;target(code)[default='sameWindow']
+#;;QuizResultsLink;Quiz Results;/my-account/update-email;QuizResultsLink
+
+#UPDATE CMSLinkComponent;$contentCV[unique=true];uid[unique=true];linkName[lang=$lang]
+#;;QuizResultsLink;"Quiz Results"
+
+#INSERT_UPDATE CMSNavigationNode;uid[unique=true];$contentCV[unique=true];name;parent(uid, $contentCV);links(&linkRef);&nodeRef
+#;QuizResultsNavNode;;QuizResultsNavNode;MyAccountNavNode;;QuizResultsNavNode
+
+#INSERT_UPDATE CMSNavigationEntry;uid[unique=true];$contentCV[unique=true];name;navigationNode(&nodeRef);item(&linkRef);
+#;QuizResultsNavNodeEntry;;QuizResultsNavNodeEntry;QuizResultsNavNode;QuizResultsLink;
+
+
+

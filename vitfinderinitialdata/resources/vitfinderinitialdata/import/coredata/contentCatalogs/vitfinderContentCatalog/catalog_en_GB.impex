@@ -1,0 +1,10 @@
+#
+# Import the Vitfinder UK Catalog
+#
+
+# Language
+$lang=en_GB
+
+# Create Content Catalog
+UPDATE ContentCatalog;id[unique=true];name[lang=$lang]
+ ;vitfinderContentCatalog;"VitFinder Content Catalog"

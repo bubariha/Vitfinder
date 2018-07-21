@@ -1,0 +1,55 @@
+﻿# ImpEx for Importing Products into Apparel Store
+#% impex.setLocale( Locale.ENGLISH ); 
+
+# Macros / Replacement Parameter definitions
+$productCatalog=vitfinderProductCatalog
+$productCatalogName=Vitfinder Product Catalog
+$catalogVersion=catalogversion(catalog(id[default=$productCatalog]),version[default='Staged'])[unique=true,default=$productCatalog:Staged]
+$baseProduct=baseProduct(code, catalogVersion(catalog(id[default='$productCatalog']),version[default='Staged']))
+$approved=approvalstatus(code)[default='approved']
+$taxGroup=Europe1PriceFactory_PTG(code)[default=uk-sales-tax-full]
+
+# Apparel products use Variants with a structure:
+# ApparelProduct > ApparelStyleVariantProduct > ApparelSizeVariantProduct
+# Apparel products may have no variations, only colour (style) variations or both colour and size variations.
+
+# Create products
+INSERT_UPDATE VitfinderGenericProduct;code[unique=true];$catalogVersion;unit(code);supercategories(code,$catalogVersion);$approved
+;G000000001;;pieces;cat-00-001;
+;G000000002;;pieces;cat-00-001;
+;G000000003;;pieces;cat-00-001;
+;G000000004;;pieces;cat-00-001;
+;G000000005;;pieces;cat-00-001;
+;G000000006;;pieces;cat-00-001;
+;G000000007;;pieces;cat-00-001;
+;G000000008;;pieces;cat-00-001;
+;G000000009;;pieces;cat-00-001;
+;G000000010;;pieces;cat-00-001;
+
+
+# Create ApparelStyleVariantProduct variants
+INSERT_UPDATE ApparelStyleVariantProduct;code[unique=true];$catalogVersion;$baseProduct;unit(code);swatchColors(code);supercategories(code,$catalogVersion);varianttype(code);$approved
+;M25687_B;;M25687;pieces;BLACK;Playboard,shirts;ApparelSizeVariantProduct
+
+# Create ApparelSizeVariantProduct variants
+INSERT_UPDATE ApparelSizeVariantProduct;code[unique=true];$catalogVersion;$baseProduct;ean;unit(code);swatchColors(code);supercategories(code,$catalogVersion);;$approved;$taxGroup
+;35099;;M18729;0700053336407;pieces;BLACK;Vans,shoes
+
+# Create products
+INSERT_UPDATE ApparelProduct;code[unique=true];$catalogVersion;unit(code)[default='pieces'];supercategories(code,$catalogVersion);varianttype(code);$approved;$taxGroup;ean;genders(code)
+;103410;;pieces;190100,snow,Quiksilver;ApparelStyleVariantProduct;;;;MALE
+
+
+# Create ApparelStyleVariantProduct variants
+INSERT_UPDATE ApparelStyleVariantProduct;code[unique=true];$catalogVersion;$baseProduct;supercategories(code,$catalogVersion);swatchColors(code);unit(code)[default='pieces'];varianttype(code);$approved
+;103410_snapper;;103410;190100,snow,Quiksilver;BLUE,GREY;pieces;ApparelSizeVariantProduct;
+
+
+# Create ApparelStyleVariantProduct variants without sizes
+INSERT_UPDATE ApparelStyleVariantProduct;code[unique=true];$catalogVersion;$baseProduct;supercategories(code,$catalogVersion);swatchColors(code);unit(code)[default='pieces'];$approved;$taxGroup
+;74036_red;;74036;100200,Toko;RED;pieces;;
+
+
+# Create ApparelSizeVariantProduct variants
+INSERT_UPDATE ApparelSizeVariantProduct;code[unique=true];$catalogVersion;$baseProduct;supercategories(code,$catalogVersion);unit(code)[default='pieces'];;$approved;$taxGroup
+;300460184;;103410_snapper;190100,snow,Quiksilver;pieces;;;

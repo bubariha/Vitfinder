@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2015 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+		
+	<context:annotation-config/> 
+
+	<alias alias="simpleSuggestionFacade" name="defaultSimpleSuggestionFacade"/>
+	<bean id="defaultSimpleSuggestionFacade" class="com.vitfinder.facades.suggestion.impl.DefaultSimpleSuggestionFacade" >
+		<property name="simpleSuggestionService" ref="simpleSuggestionService"/>
+		<property name="userService" ref="userService"/>
+		<property name="categoryService" ref="categoryService"/>
+		<property name="productService" ref="productService"/>
+		<property name="productConverter" ref="carouselProductConverter"/>
+		<property name="cartService" ref="cartService"/>
+	</bean>
+	
+	<bean id="carouselProductConverter" parent="defaultProductConverter">
+		<property name="populators">
+			<list merge="true">
+				<ref bean="productPricePopulator"/>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="acceleratorVariantOptionDataConverter" alias="variantOptionDataConverter"/> 
+	<bean id="acceleratorVariantOptionDataConverter" parent="abstractPopulatingConverter">
+		<lookup-method name="createTarget" bean="variantOptionData"/>
+		<property name="populators">
+			<list>
+				<ref bean="acceleratorVariantOptionDataPopulator"/>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="defaultAcceleratorVariantOptionDataPopulator" alias="acceleratorVariantOptionDataPopulator"/>
+	<bean id="defaultAcceleratorVariantOptionDataPopulator"  class="com.vitfinder.facades.populators.AcceleratorVariantOptionDataPopulator"
+	      parent="variantOptionDataPopulator" >
+		<property name="mediaService" ref="mediaService"/>
+		<property name="mediaContainerService" ref="mediaContainerService"/>
+		<property name="typeService" ref="typeService"/>
+		<property name="imageFormatMapping" ref="imageFormatMapping"/>
+		<property name="variantAttributeMapping">
+			<map>
+				<entry key="ApparelStyleVariantProduct.style" value="styleSwatch"/>
+			</map>
+		</property>
+	</bean>
+
+
+	<alias name="acceleratorGenderConverter" alias="genderConverter"/> 
+	<bean id="acceleratorGenderConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass" value="com.vitfinder.facades.product.data.GenderData"/>
+			<property name="populators">
+				<list>
+					<ref bean="genderDataPopulator"/>
+				</list>
+			</property>
+	</bean>
+
+	<alias name="defaultGenderDataPopulator" alias="genderDataPopulator"/>
+	<bean id="defaultGenderDataPopulator" class="com.vitfinder.facades.populators.GenderDataPopulator" >
+		<property name="typeService" ref="typeService"/>
+	</bean>
+
+	<bean id="apparelProductPopulator" class="com.vitfinder.facades.populators.ApparelProductPopulator" >
+		<property name="genderConverter" ref="genderConverter"/>
+	</bean>
+
+	<!-- Add the apparelProductPopulator to the productConverter -->
+	<bean parent="modifyPopulatorList">
+		<property name="list" ref="productConverter"/>
+		<property name="add" ref="apparelProductPopulator"/>
+	</bean>
+
+	<!-- accelerator Image Format Mappings -->
+	<alias name="acceleratorImageFormatMapping" alias="imageFormatMapping"/>
+	<bean id="acceleratorImageFormatMapping" parent="defaultImageFormatMapping">
+		<property name="mapping">
+			<map>
+				<entry key="superZoom" value="1200Wx1200H"/>
+				<entry key="zoom" value="515Wx515H"/>
+				<entry key="store" value="365Wx246H"/>
+				<entry key="product" value="300Wx300H"/>
+				<entry key="thumbnail" value="96Wx96H"/>
+				<entry key="cartIcon" value="65Wx65H"/>
+				<entry key="styleSwatch" value="30Wx30H"/>
+			</map>
+		</property>
+	</bean>
+
+	<alias name="acceleratorProductPrimaryImagePopulator" alias="productPrimaryImagePopulator" />
+	<bean id="acceleratorProductPrimaryImagePopulator" parent="defaultProductPrimaryImagePopulator">
+		<property name="imageFormats">
+			<list>
+				<value>zoom</value>
+				<value>product</value>
+				<value>thumbnail</value>
+				<value>cartIcon</value>
+			</list>
+		</property>
+	</bean>
+
+	<alias name="acceleratorProductGalleryImagesPopulator" alias="productGalleryImagesPopulator" />
+	<bean id="acceleratorProductGalleryImagesPopulator" parent="defaultProductGalleryImagesPopulator">
+		<property name="imageFormats">
+			<list>
+				<value>superZoom</value>
+				<value>zoom</value>
+				<value>product</value>
+				<value>thumbnail</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="customerEmailContext" class="com.vitfinder.facades.process.email.context.CustomerEmailContext" parent="abstractEmailContext" scope="prototype" >
+		<property name="customerConverter" ref="customerConverter"/>
+	</bean>
+
+	<bean id="forgottenPasswordEmailContext" class="com.vitfinder.facades.process.email.context.ForgottenPasswordEmailContext" parent="customerEmailContext" scope="prototype" >
+		<property name="customerConverter" ref="customerConverter"/>
+	</bean>
+	
+	<bean id="orderNotificationEmailContext" class="com.vitfinder.facades.process.email.context.OrderNotificationEmailContext" parent="abstractEmailContext" scope="prototype" >
+		<property name="orderConverter" ref="orderConverter"/>
+	</bean>
+	
+	<bean id="deliverySentEmailContext" class="com.vitfinder.facades.process.email.context.DeliverySentEmailContext" parent="abstractEmailContext" scope="prototype" >
+		<property name="consignmentConverter" ref="consignmentConverter"/>
+	</bean>
+	
+	<bean id="readyForPickupEmailContext" class="com.vitfinder.facades.process.email.context.ReadyForPickupEmailContext" parent="abstractEmailContext" scope="prototype" >
+		<property name="consignmentConverter" ref="consignmentConverter"/>
+	</bean>
+	
+	<bean id="orderCancelledEmailContext" class="com.vitfinder.facades.process.email.context.OrderCancelledEmailContext" parent="abstractEmailContext" scope="prototype" >
+		<property name="orderConverter" ref="orderConverter"/>
+	</bean>
+	
+	<bean id="orderRefundEmailContext" class="com.vitfinder.facades.process.email.context.OrderRefundEmailContext" parent="abstractEmailContext" scope="prototype" >
+		<property name="orderConverter" ref="orderConverter"/>
+	</bean>
+	<bean id="consignmentCollectionReminderEmailContext" class="com.vitfinder.facades.process.email.context.ConsignmentCollectionReminderEmailContext" parent="abstractEmailContext" scope="prototype">
+        <property name="consignmentConverter" ref="consignmentConverter"/>
+        <property name="formatFactory" ref="formatFactory"/>
+        <property name="customerServiceUncollectedConsignmentStrategy" ref="customerServiceUncollectedConsignmentStrategy" />
+        <property name="orderConverter" ref="orderConverter"/>
+    </bean>
+
+	<bean id="orderPartiallyModifiedEmailContext" class="com.vitfinder.facades.process.email.context.OrderPartiallyModifiedEmailContext" parent="abstractEmailContext" scope="prototype" >
+		<property name="orderConverter" ref="orderConverter"/>
+		<property name="orderEntryConverter" ref="orderEntryConverter"/>
+		<property name="priceDataFactory" ref="priceDataFactory"/>		
+	</bean>
+
+	<bean id="orderPartiallyCanceledEmailContext" class="com.vitfinder.facades.process.email.context.OrderPartiallyCanceledEmailContext" parent="orderPartiallyModifiedEmailContext" scope="prototype" >
+	</bean>
+
+	<bean id="orderPartiallyRefundedEmailContext" class="com.vitfinder.facades.process.email.context.OrderPartiallyRefundedEmailContext" parent="orderPartiallyModifiedEmailContext" scope="prototype" >
+	</bean>
+
+	<bean id="notPickedUpConsignmentCanceledEmailContext" class="com.vitfinder.facades.process.email.context.NotPickedUpConsignmentCanceledEmailContext" parent="abstractEmailContext" scope="prototype" >
+		<property name="consignmentConverter" ref="consignmentConverter"/>
+		<property name="priceDataFactory" ref="priceDataFactory"/>
+	</bean>
+
+	<alias name="yacceleratorSearchPagePointOfServiceDistancePopulator" alias="searchPagePointOfServiceDistancePopulator" />
+	<bean id="yacceleratorSearchPagePointOfServiceDistancePopulator" class="com.vitfinder.facades.storefinder.populators.SearchPagePointOfServiceDistancePopulator" >
+		<property name="pointOfServiceDistanceConverter" ref="pointOfServiceDistanceConverter"/>
+	</bean>
+
+	<bean id="genderData" class="com.vitfinder.facades.product.data.GenderData" scope="prototype"/>
+	
+	<alias name="defaultVitfinderCustomerFacade" alias="customerFacade"/>
+	<bean id="defaultVitfinderCustomerFacade" class="com.vitfinder.facades.customer.impl.DefaultVitfinderCustomerFacade" parent="defaultCustomerFacade" scope="prototype"/>
+	<alias name="vitFinderFeaturePopulator" alias="featurePopulator"/>
+	<bean id="vitFinderFeaturePopulator"
+			class="com.vitfinder.facades.populators.VitFinderFeaturePopulator" parent="defaultFeaturePopulator"/>
+	<alias name="vitfinderStockPopulator" alias="stockPopulator"/>
+	<bean id="vitfinderStockPopulator" class='com.vitfinder.facades.populators.VitfinderStockPopulator' parent="defaultStockPopulator"/>
+	
+	<bean id="communicationPreferencePopulator"
+		class="com.vitfinder.facades.populators.CommunicationPreferencePopulator" />
+
+	<alias name="defaultCommunicationPreferenceConverter" alias="communicationPreferenceConverter" />
+	<bean id="defaultCommunicationPreferenceConverter" parent="abstractPopulatingConverter">
+		<property name="targetClass"
+			value="com.vitfinder.facades.user.data.CommunicationPreferenceData" />
+		<property name="populators">
+			<list>
+				<ref bean="communicationPreferencePopulator" />
+			</list>
+		</property>
+	</bean>
+	<alias name="defaultVitFinderCustomerPopulator" alias="vitFinderCustomerPopulator" />
+	<bean id="defaultVitFinderCustomerPopulator"
+		class="com.vitfinder.facades.populators.VitfinderCustomerPopulator">
+		<property name="communicationPreferenceConverter" ref="communicationPreferenceConverter" />
+	</bean>
+	<bean parent="modifyPopulatorList">
+		<property name="list" ref="customerConverter" />
+		<property name="add" ref="vitFinderCustomerPopulator" />
+	</bean>
+	
+	<alias name="vitFinderProductPricePopulator" alias="productPricePopulator"/>
+	<bean id="vitFinderProductPricePopulator" parent="baseProductPopulator"
+			class="com.vitfinder.facades.populators.VitFinderProductPricePopulator">
+		<property name="priceDataFactory" ref="priceDataFactory"/>
+		<property name="commercePriceService" ref="commercePriceService"/>
+	</bean>
+	
+	<alias name="vitfinderProductPromotionsPopulator" alias="productPromotionsPopulator"/>
+	<bean id="vitfinderProductPromotionsPopulator" class="com.vitfinder.facades.populators.VitfinderProductPromotionsPopulator" parent="baseProductPopulator"/>
+	
+	<alias name="defaultOrderEntryProductConverter" alias="orderEntryProductConverter"/>
+	<bean id="defaultOrderEntryProductConverter" parent="defaultProductConverter">
+		<property name="populators">
+			<list merge="true">
+				<ref bean="productDeliveryModeAvailabilityPopulator"/>
+				<ref bean="productStockPopulator"/>
+				<ref bean="productCategoriesPopulator"/>
+				<ref bean="productPromotionsPopulator"/>
+				<ref bean="productClassificationPopulator"/>
+				<ref bean="productDescriptionPopulator"/>
+			</list>
+		</property>
+	</bean>
+	
+	<alias name="vitfinderCartPopulator" alias="cartPopulator"/>
+	<bean id="vitfinderCartPopulator" class="com.vitfinder.facades.populators.VitfinderCartPopulator"
+			parent="defaultCartPopulator">
+		<property name="classificationService" ref="classificationService" />
+		<property name="featurePopulator" ref="featurePopulator"/>	
+		<property name="basketSortPopulator" ref="basketSortPopulator"/>
+		<property name="flexibleSearchService" ref="flexibleSearchService"/>
+	</bean>
+
+	<!-- vtf-40 -->
+	<bean id="vitfinderCheckoutFacade" class="com.vitfinder.facades.checkout.VitfinderCheckoutFacade"
+		parent="defaultCheckoutFacade">
+		<property name="deliveryService" ref="vitfinderRetailerDeliveryService" />
+	</bean>
+	
+	<alias name="vitfinderVariantFullPopulator" alias="variantFullPopulator"/>
+	<bean id="vitfinderVariantFullPopulator"
+			class="com.vitfinder.facades.populators.VitfinderVariantFullPopulator"
+			scope="prototype" parent="defaultVariantFullPopulator">
+	</bean>
+	<alias name="vitfinderCartFacade" alias="cartFacade"/>
+	<bean id="vitfinderCartFacade" class="com.vitfinder.facades.facades.VitfinderCartFacade" parent="defaultCartFacade">
+		<property name="modelService" ref="modelService"/>
+		<property name="flexibleSearchService" ref="flexibleSearchService"/>
+		<property name="cartFactory" ref="cartFactory"/>
+		<property name="eanProductResolverFromGenericProduct" ref="eanProductResolverFromGenericProduct"/>
+		<property name="vitfinderCommerceUpdateCartEntryStrategy" ref="commerceUpdateCartEntryStrategy"/>
+		<property name="vitfinderCommerceAddToCartStrategy" ref="vitfinderCommerceAddToCartStrategy"/>
+	</bean>
+	<bean id="basketSortPopulator" class="com.vitfinder.facades.populators.BasketSortPopulator"/>
+	<alias name="vitfinderEanProductResolverFromGenericProduct" alias="eanProductResolverFromGenericProduct"/>
+	<bean id="vitfinderEanProductResolverFromGenericProduct" class="com.vitfinder.facades.service.impl.VitfinderEanProductResolverFromGenericProduct">
+		<property name="productSearchFacade" ref="productSearchFacade"/>
+	</bean>
+	
+	<bean id="abstractBasketSort" abstract="true" class="com.vitfinder.facades.service.sort.AbstractBasketSort">
+		<property name="eanProductResolverFromGenericProduct" ref="eanProductResolverFromGenericProduct"/>
+		<property name="modelService" ref="modelService"/>
+		<property name="cartService" ref="cartService"/>
+		<property name="productService" ref="productService"/>
+		<property name="commerceCartService" ref="commerceCartService"/>
+		<property name="cartFacade" ref="cartFacade"/>
+	</bean>
+	
+	<bean id="basketPriceSort" class="com.vitfinder.facades.service.sort.BasketPriceSort" parent="abstractBasketSort"/>
+		
+	<bean id="basketCheapestPriceSort" class="com.vitfinder.facades.service.sort.BasketCheapestPriceSort" parent="abstractBasketSort"/>
+	<alias name="vitfinderCommerceAddToCartStrategy" alias="commerceAddToCartStrategy"/>
+	<bean id="vitfinderCommerceAddToCartStrategy"
+			class="com.vitfinder.facades.strategy.impl.VitfinderCommerceAddToCartStrategy"
+			parent="defaultCommerceAddToCartStrategy">
+			<property name="cartFacade" ref="cartFacade"/>
+	</bean>
+	<alias name="vitfinderCategoryPopulator" alias="categoryPopulator"/>
+	<bean id="vitfinderCategoryPopulator"  class="com.vitfinder.facades.populators.VitfinderCategoryPopulator" parent="defaultCategoryPopulator"/>
+	<alias name="vitfinderQuestionaryFacade" alias="questionaryFacade"/>
+	<bean class="com.vitfinder.facades.facades.VitfinderQuestionaryFacade" id="vitfinderQuestionaryFacade">
+		<property name="categoryConverter" ref="categoryConverter"/>
+		<property name="commerceCategoryService" ref="commerceCategoryService"/>
+			<property name="userService" ref="userService"/>
+			<property name="modelService" ref="modelService"/>
+			<property name="productConverter" ref="productConverter" />
+	</bean>	
+</beans>
